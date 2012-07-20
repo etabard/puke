@@ -344,7 +344,7 @@ def unpack (pack_file, output, extract = None, verbose=True):
         
        
         #folder
-        if not data:
+        if data == None:
             continue
         
         output_file = os.path.join(output, fname)
