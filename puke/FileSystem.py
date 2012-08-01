@@ -12,6 +12,8 @@ def makedir(dirname):
     if dirname == "":
         return
     
+    dirname = realpath(dirname)
+
     if exists(dirname) and isfile(dirname):
         raise FileSystemError("%s is a file. Cannot create a directory" % dirname)
         
@@ -22,6 +24,7 @@ def makedir(dirname):
             raise FileSystemError("Error creating %s : %s" % (dirname, e) )
 
 def readfile(file):
+    file = realpath(file)
     data = None
     fh = None
     try:
@@ -38,6 +41,7 @@ def readfile(file):
     return data
 
 def checksum (file):
+    file = realpath(file)
     block_size=2**20
     md5 = hashlib.md5()
     data = None
@@ -61,7 +65,7 @@ def checksum (file):
     return md5.hexdigest()
 
 def remove(file):
-
+    file = realpath(file)
     if not file or file in ['./', '/', '~/', '~', '.', '..', '../']:
         raise FileSystemError('Invalid path %s' % file)
     
@@ -75,6 +79,8 @@ def remove(file):
     
 
 def copyfile(src, dst, force = False):
+    src = realpath(src)
+    dst = realpath(dst)
     """ Copy src file to dst file. Both should be filenames, not directories. """
     
     if not os.path.isfile(src):
@@ -106,12 +112,14 @@ def copyfile(src, dst, force = False):
     return True
     
 def exists(src):
+    src = realpath(src)
     if not os.path.exists(src):
         return False
 
     return True
     
 def isfile(src):
+    src = realpath(src)
     if not exists(src):
         raise FileSystemError('isfile error : %s not found' % src)
 
@@ -121,6 +129,7 @@ def isfile(src):
     return True
 
 def isdir(dirname):
+    dirname = realpath(dirname)
     if not exists(dirname):
         raise FileSystemError('isdir error : %s not found' % dirname)
 
@@ -131,6 +140,7 @@ def isdir(dirname):
 
 
 def writefile(dst, content, mtime = None, binary = False):
+    dst = realpath(dst)
     # First test for existance of destination directory
     makedir(os.path.dirname(dst))
     
@@ -167,7 +177,11 @@ def normpath(path):
 def sep():
     return os.sep
 
+def realpath(path):
+    return os.path.realpath(os.path.expanduser(path))
+
 def chown(path, uname = None, gname = None):
+    path = realpath(path)
     isfile(path)
 
     if not uname:
@@ -189,6 +203,7 @@ def chown(path, uname = None, gname = None):
     return os.chown(path, uid, gid)
 
 def chmod(path, mode):
+    path = realpath(path)
     isfile(path)
 
 
