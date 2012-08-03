@@ -277,7 +277,8 @@ def stats(file_list, title = ""):
         console.info(  "   No files ")
         return False
 
-    size = __exec("du -k  %s | cut  -f1 |(tr '\n' '+'; echo 0) | bc" % ' '.join(file_list))
+    safelist = '"' + '" "'.join(file_list) + '"'
+    size = __exec("du -k  %s | cut  -f1 |(tr '\n' '+'; echo 0) | bc" % safelist)
     
     try:
         size = int(size)
@@ -286,7 +287,7 @@ def stats(file_list, title = ""):
     
     size = size * 1024
 
-    lines = __exec("wc -l %s | tail -1" % ' '.join(file_list))
+    lines = __exec("wc -l %s | tail -1" % safelist)
     lines =  re.findall(r'\d+(?:\.\d+)?', lines)
     if len(lines):
         try:
