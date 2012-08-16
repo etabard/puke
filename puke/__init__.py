@@ -28,7 +28,7 @@ import puke.Utils
 VERSION = 0.1
 __all__ = [
             "main", "VERSION", "Error", "FileList", "Sed", "Std", "Env", "Require", "Yak", "VirtualEnv", "System", "FileSystem", "Utils",
-            "combine", "sh", "minify", "jslint", "jsdoc", "patch", "prompt", "deepcopy", "stats", "pack", "unpack", "hsizeof", "console", "SSH"
+            "combine", "sh", "minify", "jslint", "jsdoc", "jsdoc3", "patch", "prompt", "deepcopy", "stats", "pack", "unpack", "hsizeof", "console", "SSH"
          ]
 
 
