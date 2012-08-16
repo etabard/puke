@@ -149,8 +149,8 @@ def jsdoc3(files, folder, template = None, fail = True):
         template = "%s/templates/gris_taupe" % jsdoc
 
     jsdoc =  os.path.join(__get_datas_path(), 'jsdoc3-jsdoc-1c6ff94')
-    output = sh('cd "%s"; java -cp lib/js.jar org.mozilla.javascript.tools.shell.Main -modules nodejs_modules -modules rhino_modules -modules . jsdoc.js\
-      --destination "%s" --template "%s" --recurse %s' % (jsdoc, folder, template, '"' + '" "'.join(files) + '"'), header = "Generating js doc v3", output = True)
+    output = sh('cd "%s"; java -classpath lib/js.jar org.mozilla.javascript.tools.shell.Main -debug -modules nodejs_modules -modules rhino_modules -modules . jsdoc.js\
+      --destination "%s" --template "%s" %s' % (jsdoc, folder, template, '"' + '" "'.join(files) + '"'), header = "Generating js doc v3", output = True)
 
 
     if fail and output:
