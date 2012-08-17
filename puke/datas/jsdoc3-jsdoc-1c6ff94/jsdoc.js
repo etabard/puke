@@ -84,7 +84,7 @@ function include(filepath) {
     }
 }
 include.resolve = function(filepath) {
-    if (filepath.indexOf('/') === 0) {
+    if (filepath.indexOf('/') === 0 || filepath.match(/^[a-z]+:\/\//)) {
         return filepath;
     }
     

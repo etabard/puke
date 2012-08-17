@@ -140,23 +140,36 @@ def jslint(files, fix = False, relax = False, fail = True):
         console.fail( ' :puke:\n' + error.group())
 
 
-def jsdoc3(files, folder, template = None, fail = True):
+def jsdoc3(files, destination, template = None, fail = True):
     System.check_package('java')
 
     files = FileList.check(files)
 
+    redirect = ''
+
     if not template:
-        template = "%s/templates/gris_taupe" % jsdoc
+        template = "templates/haruki"
+
+    if template == "templates/haruki":
+        redirect = destination
+        destination = "console"
 
     jsdoc =  os.path.join(__get_datas_path(), 'jsdoc3-jsdoc-1c6ff94')
+    out = Std()
     output = sh('cd "%s"; java -classpath lib/js.jar org.mozilla.javascript.tools.shell.Main -debug -modules nodejs_modules -modules rhino_modules -modules . jsdoc.js\
-      --destination "%s" --template "%s" %s' % (jsdoc, folder, template, '"' + '" "'.join(files) + '"'), header = "Generating js doc v3", output = True)
+      --destination "%s" --template "%s" %s' % (jsdoc, destination, template, '"' + '" "'.join(files) + '"'), header = "Generating js doc v3", output = False, std = out)
 
-
-    if fail and output:
-        console.fail(output)
+    if fail and out.code:
+        console.fail(out.err)
     
-    console.confirm('  Doc v3 generated in "%s"' % folder)
+    if template == "templates/haruki":
+        writefile(redirect, out.out);
+        console.confirm('  JSON Doc generated in "%s"' % redirect)
+    else:
+        console.confirm('  JSON Doc generated in "%s"' % destination)
+
+    return out.out
+
 
 def jsdoc(files, folder, template = None, fail = True):
     System.check_package('java')

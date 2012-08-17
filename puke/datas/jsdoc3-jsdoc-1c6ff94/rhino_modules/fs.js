@@ -1,8 +1,10 @@
 /*global Packages: true */
 exports.readFileSync = function(filename, encoding) {
     encoding = encoding || 'utf-8';
-
-    return readFile(filename, encoding);
+    if(filename.match(/^[a-z]+:\/\//))
+        return readUrl(filename, encoding);
+    else
+        return readFile(filename, encoding);
 };
 
 var stat = exports.stat = exports.statSync = function(path, encoding) {
