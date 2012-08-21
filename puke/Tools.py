@@ -69,7 +69,7 @@ def combine(in_files, out_file, verbose=False, replace = None):
     console.confirm( "  Generating %s" % out_file)
     writefile(out_file, combined)
 
-def minify(in_file, out_file = None, verbose=False, strict=False):
+def minify(in_file, out_file = None, verbose=False, strict=True, ecma3=False):
 
     System.check_package('java')
 
@@ -86,7 +86,7 @@ def minify(in_file, out_file = None, verbose=False, strict=False):
     console.header('- Minifying %s (%.2f kB)' % (__pretty(in_file), org_size / 1024.0))
 
     if in_type == 'js':
-        __minify_js(in_file, out_file + '.tmp', verbose, strict)
+        __minify_js(in_file, out_file + '.tmp', verbose, strict, ecma3)
     else:
         __minify_css(in_file, out_file + '.tmp', verbose)
     
@@ -474,16 +474,18 @@ def __parse_scss(payload):
     css = Scss()
     return css.compile(payload)
 
-def __minify_js(in_file, out_file, verbose, strict=False):
+def __minify_js(in_file, out_file, verbose, strict=True, ecma3=False):
     options = ['--js %s' % in_file,
                '--js_output_file %s' % out_file,
                '--warning_level QUIET']
+    if ecma3 == True:
+        options.append('--language_in ECMASCRIPT3')
+    elif strict == True:
+        options.append('--language_in ECMASCRIPT5_STRICT')
+    else:
+        options.append('--language_in ECMASCRIPT5')
 
-    if strict == True:
-        options.append('--language_in=ECMASCRIPT5_STRICT')
-
-    os.system('java -jar "%s" %s' % (JS_COMPRESSOR,
-                                          ' '.join(options)))
+    os.system('java -jar "%s" %s' % (JS_COMPRESSOR, ' '.join(options)))
 
 def __get_datas_path():
     return os.path.join(os.path.dirname( __file__ ), 'datas')
