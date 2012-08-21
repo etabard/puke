@@ -65,7 +65,8 @@ def run():
 
     (options, args) = parser.parse_args()
 
-
+    rLog = logging.getLogger('requests')
+    rLog.setLevel(logging.WARNING)
     #
     # Configure logging
     # 
@@ -76,6 +77,7 @@ def run():
     elif not logging.root.handlers:
         if options.verbose is True:
             logging.getLogger().setLevel(logging.DEBUG)
+            rLog.setLevel(logging.DEBUG)
         elif options.verbose is False:
             logging.getLogger().setLevel(logging.WARN)
         else:
