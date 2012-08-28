@@ -53,6 +53,10 @@ from puke.Yak import *
 from puke.Utils import *
 
 
+def custom_str_constructor(loader, node):
+    return loader.construct_scalar(node).encode('utf-8')
+
+yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)
 
 class Require(object):
 
@@ -140,8 +144,11 @@ class Require(object):
 
 		if isinstance(data, list):
 			dataIter = enumerate(data)
-		else:
+		elif isinstance(data, dict):
 			dataIter = data.items()
+		else:
+			return
+
 		
 		for (node, value) in dataIter:
 			if not isinstance(value, (str, int)):
