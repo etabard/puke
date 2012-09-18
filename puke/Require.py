@@ -58,6 +58,43 @@ def custom_str_constructor(loader, node):
 
 yaml.add_constructor(u'tag:yaml.org,2002:str', custom_str_constructor)
 
+
+class Load(object):
+
+	def __init__(self, filename):
+		self.content = None
+
+		try:
+			stream = None
+			stream = file(filename, 'r')
+
+			payload = stream.read()
+			stream.close()
+
+			size = payload.strip()
+
+			ext = os.path.splitext(stream.name)[1]
+
+			if size == 0:
+				self.content = { }
+				return
+			
+			if ext in ['.json', '.js']:
+				self.content = json.loads(payload)
+			elif ext in ['.yaml', '.yml']:
+				self.content = yaml.load(payload)
+						
+		except Exception as error :
+			raise RequireError("Require load error : %s" % error)
+			self.content = None
+
+	def __str__(self):
+		return "%s" % self.content
+
+	def __repr__(self):
+		return "%s" % self.content
+
+
 class Require(object):
 
 	__sharedState = {}
@@ -68,13 +105,13 @@ class Require(object):
 		self.__dict__ = self.__sharedState
 		if not self.__sharedState:
 			self.__files = [filename]
-			self.__cfg = self.__load(filename)
+			self.__cfg = Load(filename).content
 			self.__makeenvs(self.__cfg)
 			
 
 	def merge(self, filename):
 		self.__files.append(filename)
-		self.__cfg = deepmerge(self.__cfg, self.__load(filename))
+		self.__cfg = deepmerge(self.__cfg, Load(filename).content)
 		self.__makeenvs(self.__cfg)
 
 	def yak(self, selector):
@@ -108,35 +145,6 @@ class Require(object):
 
 	def __repr__(self):
 		return 'Config: %s' % self.__cfg
-
-	def __load(self, filename):
-		try:
-			stream = None
-			stream = file(filename, 'r')
-
-			payload = stream.read()
-			stream.close()
-
-			size = payload.strip()
-
-			ext = os.path.splitext(stream.name)[1]
-
-			result = None
-
-			if size == 0:
-				result = { }
-				return result
-			
-			if ext in ['.json', '.js']:
-				result = json.loads(payload)
-			elif ext in ['.yaml', '.yml']:
-				result = yaml.load(payload)
-						
-		except Exception as error :
-			raise RequireError("Require load error : %s" % error)
-			result = None
-
-		return result
 	
 	def __makeenvs(self, data ):
 		if data == None:
