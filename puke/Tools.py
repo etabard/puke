@@ -151,9 +151,9 @@ def jsdoc3(files, destination, template = None, fail = True):
     redirect = ''
 
     if not template:
-        template = "templates/haruki"
+        template = "templates/gristaupe"
 
-    if template == "templates/haruki":
+    if template == "templates/gristaupe":
         redirect = destination
         destination = "console"
 
@@ -165,7 +165,7 @@ def jsdoc3(files, destination, template = None, fail = True):
     if fail and out.code:
         console.fail(out.err)
     
-    if template == "templates/haruki":
+    if template == "templates/gristaupe":
         writefile(redirect, out.out);
         console.confirm('  JSON Doc generated in "%s"' % redirect)
     else:
