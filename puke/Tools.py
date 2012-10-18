@@ -157,7 +157,7 @@ def jsdoc3(files, destination, template = None, fail = True):
         redirect = destination
         destination = "console"
 
-    jsdoc =  os.path.join(__get_datas_path(), 'jsdoc3-jsdoc-1c6ff94')
+    jsdoc =  os.path.join(__get_datas_path(), 'jsdoc3')
     out = Std()
     output = sh('cd "%s"; java -classpath lib/js.jar org.mozilla.javascript.tools.shell.Main -debug -modules nodejs_modules -modules rhino_modules -modules . jsdoc.js\
       --destination "%s" --template "%s" %s' % (jsdoc, destination, template, '"' + '" "'.join(files) + '"'), header = "Generating js doc v3", output = False, std = out)
