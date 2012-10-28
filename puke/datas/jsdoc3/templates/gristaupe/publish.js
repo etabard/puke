@@ -1,3 +1,16 @@
+function killUndefined(arr){
+  return arr.map(function(item){
+    if(typeof item != 'object')
+      return item;
+    var ret = {};
+    for(var i in item){
+      if(typeof item[i] != 'undefined')
+        ret[i] = item[i];
+    }
+    return ret;
+  });
+}
+
 function graft(parentNode, childNodes, parentLongname, parentName) {
     childNodes
     .filter(function (element) {
@@ -8,10 +21,10 @@ function graft(parentNode, childNodes, parentLongname, parentName) {
         parentNode[element.kind] = [];
 
       var clone = {};
-      var backlist = ['comment', 'meta', 'kind', 'memberof'];
+      var backlist = ['comment', 'meta', 'memberof'];
       for(var i in element){
-        if((backlist.indexOf(i) == -1) && (typeof element[i] != 'function'))
-          clone[i] = element[i];
+        if((backlist.indexOf(i) == -1) && (typeof element[i] != 'function') && (typeof element[i] != 'undefined'))
+          clone[i] = Array.isArray(element[i]) ? killUndefined(element[i]) :  element[i];
       }
 
       parentNode[element.kind].push(clone);

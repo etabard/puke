@@ -123,7 +123,7 @@ def jslint(files, fix = False, relax = False, fail = True):
     # This covers jsdoctoolkit 2
     tags = '--custom_jsdoc_tags=homepage,version,ignore,returns,example,function,requires,name,namespace,property,static,constant,default,location,copyright,memberOf,lends,fileOverview'
     # This covers jsdoc3 as well
-    tags += ',file,kind,summary,description,event,exception,exports,fires,global,inner,instance,member,var,memberof,mixes,mixin,arg,argument,readonly,since,todo,public'
+    tags += ',module,abstract,file,kind,summary,description,event,exception,exports,fires,global,inner,instance,member,var,memberof,mixes,mixin,arg,argument,readonly,since,todo,public'
     options.append(tags)
 
     if fix == True:
