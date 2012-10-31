@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 
-import urllib2
+import requests
 import hashlib
 
 from puke.Console import *
@@ -32,8 +32,10 @@ class Cache:
 				payload = buffer.getvalue()
 				buffer.close()
 			else:
-				handler = urllib2.build_opener()
-				payload = handler.open(url, None, 60).read()
+				handler = requests.get(url)
+				payload = handler.raw.read()
+				if len(handler.history):
+					console.warn('Cache#Fetching http redirect : %s (%s)'% (url, handler.history))
 		except Exception as error:
 			console.fail('HTTP fail %s (%s)' % (url, error))
 			return False
