@@ -32,7 +32,7 @@ class Cache:
 				payload = buffer.getvalue()
 				buffer.close()
 			else:
-				handler = requests.get(url)
+				handler = requests.get(url, verify=False)
 				payload = handler.text.decode('utf-8')
 				if len(handler.history):
 					console.warn('Cache#Fetching http redirect : %s (%s)'% (url, handler.history))
