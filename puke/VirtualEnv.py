@@ -64,6 +64,23 @@ class VirtualEnv(object):
 
 		console.confirm('   Package "%s" is ready' % package)
 
+	def sh(self, command, header = None, output = True, timeout = None, std = None, ssh=None):
+		if not self.__path:
+			raise VirtualEnvError('Need load|create before install')
+
+		cmd = [
+			'source %s' % os.path.join(self.__path, 'bin', 'activate')
+		]
+
+		if isinstance(command, list):
+			cmd = cmd+command
+
+		if isinstance(command, str):
+			cmd.append(command)
+
+		return sh(cmd, header=header, output=output, timeout=timeout, std=std, ssh=ssh)
+
+
 	def upgrade(self, package = "*"):
 
 		if package == "*":
