@@ -161,7 +161,7 @@ class Require(object):
 		for (node, value) in dataIter:
 			if not isinstance(value, (str, int)):
 				self.__makeenvs(value)
-			elif value.startswith('${'):
+			elif isinstance(value, str) and value.startswith('${'):
 				m = self.__globalPattern.match(value)
 				if not m:
 					continue
