@@ -153,7 +153,7 @@ def writefile(dst, content, mtime = None, binary = False):
     try:
         handle = open(dst, mode=mode)
 
-        if isinstance(content, requests.models.Response)
+        if isinstance(content, requests.models.Response):
             for chunk in content.iter_content(1024):
                 handle.write(chunk)
         else:
