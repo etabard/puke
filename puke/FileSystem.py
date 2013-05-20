@@ -5,6 +5,7 @@ import os, time, pwd, grp
 import shutil, hashlib
 from puke.Console import *
 import Utils
+import requests
 
 def makedir(dirname):
     """ Creates missing hierarchy levels for given directory """
@@ -151,7 +152,12 @@ def writefile(dst, content, mtime = None, binary = False):
         mode = "w"
     try:
         handle = open(dst, mode=mode)
-        handle.write(content)
+
+        if isinstance(content, requests.models.Response)
+            for chunk in content.iter_content(1024):
+                handle.write(chunk)
+        else:
+            handle.write(content)
         handle.close()
     except Exception as e:
         raise FileSystemError("Error writing file %s : %s" % (dst, e))
