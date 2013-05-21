@@ -105,6 +105,9 @@ class CompressTar(CompressInterface):
 		
 		return (res.read(), infos)
 
+	def extractall(self, path):
+		self.__instance.extractall(path)
+
 	def __iter__(self):
 		return iter(self.__instance.getnames())
 
