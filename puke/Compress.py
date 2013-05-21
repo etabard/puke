@@ -65,6 +65,10 @@ class CompressInterface():
 		'''uncompress file'''
 		raise NotImplemented()
 
+	def extractall(self, path):
+		'''uncompress archive'''
+		raise NotImplemented()
+
 	def __iter__(self):
 		raise NotImplemented()
 
@@ -133,6 +137,9 @@ class CompressZip(CompressInterface):
 		infos.mode = int( "%o" % ((self.__instance.getinfo(file).external_attr >> 16L) & 0777))
 		infos.mtime = time.mktime(datetime.datetime(*self.__instance.getinfo(file).date_time[0:6]).timetuple())
 		return (self.__instance.read(file), infos)
+
+	def extractall(self, path):
+		self.__instance.extractall(path)
 
 	def __iter__(self):
 		for item in self.__instance.namelist():

@@ -368,7 +368,11 @@ def unpack (pack_file, output, extract = None, verbose=True):
 
     comp = Compress.open(pack_file, "r")
     
-    
+    if not extract:
+        comp.extractall(output)
+        comp.close()
+        console.confirm(" %s fast unpacked in %s" % (pack_file, output))
+        return True
 
     count = 0
     for fname in comp:
