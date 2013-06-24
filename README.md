@@ -37,8 +37,8 @@ Basic file manipulation, js linting via closure, minification via closure and YU
 
 ## Changelog
 
-### 1.3
-
+### 1.5
+ * console.say on Mac OS X (e.g console.say("Build failed!"))
  * Require.merge() makes now a deep merge
  * sh() can take now multiple commandes : sh(['cd somepath', 'do something'])
  * prompt('message', 'default') to prompt during the build
