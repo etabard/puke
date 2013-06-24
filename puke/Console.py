@@ -5,6 +5,10 @@ import logging, sys, os, json
 from colorama import *
 import subprocess
 
+SPEAK_ENABLED = False
+SPEAK_MESSAGE_ON_FAIL = "Build failed!"
+SPEAK_MESSAGE_ON_SUCCESS = "Build success!"
+
 init(autoreset = True)
 
 class console:
@@ -101,6 +105,9 @@ class console:
 
 	@staticmethod
 	def fail(msg):
+		if SPEAK_ENABLED and SPEAK_MESSAGE_ON_FAIL:
+			console.say(SPEAK_MESSAGE_ON_FAIL)
+
 		msg = console.stringify(msg)
 		msg = console.pukefactory(msg)
 		console.error(" /!\\ BUILD FAIL : " + msg)

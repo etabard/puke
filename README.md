@@ -38,6 +38,7 @@ Basic file manipulation, js linting via closure, minification via closure and YU
 ## Changelog
 
 ### 1.5
+ * Speak mode on build fail/success (Mac OS X only)
  * console.say on Mac OS X (e.g console.say("Build failed!"))
  * Require.merge() makes now a deep merge
  * sh() can take now multiple commandes : sh(['cd somepath', 'do something'])
@@ -171,6 +172,7 @@ Options:
                         Write debug messages to given logfile
   -f FILE, --file=FILE  Use the given build script
   -p, --patch           Patch closure
+  -s, --speak           puke speaks on fail/success (Mac OS X only)
 </pre>
 
 Can't remember your tasks ? Just puke it 
@@ -330,6 +332,24 @@ console.fail("fail")
 
 #Mac OS X only
 console.say("Build failed!")
+</pre>
+
+### Speak options (Mac OS X only):
+
+<pre>
+  #Manually enable/disable speak mode
+  Console.SPEAK_ENABLED = True
+
+  #Custom message on build fail
+  Console.SPEAK_MESSAGE_ON_FAIL = "Shit happens..."
+  Console.SPEAK_MESSAGE_ON_SUCCESS = "Holy macaroni!"
+
+  #Deactivate success alert
+  Console.SPEAK_MESSAGE_ON_SUCCESS = None
+
+  #Deactivate fail alert
+  Console.SPEAK_MESSAGE_ON_FAIL = None
+
 </pre>
 
 ### Prompt :

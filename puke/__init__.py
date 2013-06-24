@@ -62,8 +62,15 @@ def run():
     parser.add_option("-f", "--file", dest="file", help="Use the given build script")
     parser.add_option("-p", "--patch",action="store_true",  dest="patch", help="Patch closure")
     parser.add_option("-i", "--info",action="store_true",  dest="info", help="puke task --info show task informations")
+    
+    if sys.platform.lower() == "darwin":
+        parser.add_option("-s", "--speak",action="store_true",  dest="speak", help="puke speaks on fail/success")
+
 
     (options, args) = parser.parse_args()
+
+    if options.speak:
+        Console.SPEAK_ENABLED = True
 
     rLog = logging.getLogger('requests')
     rLog.setLevel(logging.WARNING)
@@ -263,5 +270,8 @@ def main():
     except KeyboardInterrupt:
         console.warn("\n\n :puke: \nBuild interrupted!\n")
         sys.exit(2)
-        
+    
+    if Console.SPEAK_ENABLED and Console.SPEAK_MESSAGE_ON_SUCCESS:
+        console.say(Console.SPEAK_MESSAGE_ON_SUCCESS)
+
     sys.exit(0)
