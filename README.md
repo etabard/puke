@@ -326,6 +326,10 @@ console.error("error", arg2, ...)
 
 console.header("header")
 console.fail("fail")
+
+
+#Mac OS X only
+console.say("Build failed!")
 </pre>
 
 ### Prompt :

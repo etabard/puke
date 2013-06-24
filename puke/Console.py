@@ -3,6 +3,7 @@
 
 import logging, sys, os, json
 from colorama import *
+import subprocess
 
 init(autoreset = True)
 
@@ -26,6 +27,15 @@ class console:
 			msg = console.stringify(m)
 			logging.info(   msg)
 
+	@staticmethod
+	def say(*messages):
+		try:
+			if sys.platform.lower() == 'darwin':
+				for m in messages:
+						s = subprocess.Popen(['say', m])
+						s.communicate()
+		except:
+			pass
 	@staticmethod
 	def debug(*messages):
 		color = Back.BLUE
