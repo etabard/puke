@@ -43,8 +43,8 @@ def exists():
     raise NotImplemented()
 
 
-def isfile():
-    raise NotImplemented()
+def isfile(path):
+    return os.path.isfile(path)
 
 
 def isdir():

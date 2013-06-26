@@ -7,7 +7,7 @@ from .exceptions import TaskNotFound
 __tasks__ = {}
 
 
-def addTask(task):
+def add(task):
     __tasks__[task.name] = task
 
 
@@ -15,7 +15,7 @@ def hasDefault():
     return True if 'default' in __tasks__ else False
 
 
-def executeTask(name, *args, **kwargs):
+def execute(name, *args, **kwargs):
     if not name in __tasks__:
         raise TaskNotFound(name)
 
@@ -54,14 +54,13 @@ class Task:
         except AttributeError:
             pass
 
-        addTask(self)
+        add(self)
 
     def __call__(self, *args, **kw):
         try:
             getcallargs(self.__func, *args)
         except TypeError as e:
-            printHelp(self.name)
-            console.fail("%s" % e)
+            help(self.name)
             raise
 
         retval = self.__func(*args)

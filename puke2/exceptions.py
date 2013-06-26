@@ -7,3 +7,7 @@ class PukeException(RuntimeError):
 
 class TaskNotFound(PukeException):
     pass
+
+
+class PukefileNotFound(PukeException):
+    pass

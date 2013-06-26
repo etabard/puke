@@ -1,0 +1,1 @@
+PUKEFILES = ('pukefile', 'pukefile.py')

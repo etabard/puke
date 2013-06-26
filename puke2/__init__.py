@@ -21,6 +21,7 @@ from . import experimental
 from . import display
 from . import logging
 from . import tasks
+from .tasks import task
 from .dependencies import sh
 
 
@@ -30,6 +31,8 @@ cache.internal = cache.FileSystemCache()
 def run():
     from optparse import OptionParser
     import sys
+    import os
+    
 
     parser = OptionParser()
     parser.add_option("-c", "--clear", action="store_true", dest="clearcache", help="Spring time, clean all the vomit")
@@ -50,6 +53,30 @@ def run():
     #output version
     if options.version:
         print("Puke %s" % __version__)
+        sys.exit(0)
+
+    scriptpath = None
+    for filename in os.listdir('.'):
+        if filename.lower() in settings.PUKEFILES and fs.isfile(filename):
+            scriptpath = filename
+            break
+
+    if options.file and fs.isfile(options.file):
+        scriptpath = options.file
+
+    if not scriptpath:
+        raise exceptions.PukefileNotFound(options.file or settings.PUKEFILES)
+
+    #TODO remove puke legacy
+    scope = {__name__ : sys.modules[__name__], 'puke' : sys.modules[__name__]}
+    scriptvalue = execfile(scriptpath, scope, scope)
+    print(scriptvalue)
+
+    if tasks.hasDefault():
+        tasks.execute('default')
+    else:
+        print("no default")
+
 
 def main():
     import sys
@@ -57,7 +84,7 @@ def main():
     try:
         run()
     except Exception as error:
-        print("Exception", error)
+        print(error)
         sys.exit(1)
     except KeyboardInterrupt:
         print("Build interrupted")
