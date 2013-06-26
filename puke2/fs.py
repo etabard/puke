@@ -12,51 +12,51 @@ class FileList(object):
 
 
 def find():
-    pass
+    raise NotImplemented()
 
 
 def mkdir():
-    pass
+    raise NotImplemented()
 
 
 def copyfile():
-    pass
+    raise NotImplemented()
 
 
 def readfile():
-    pass
+    raise NotImplemented()
 
 
 def writefile():
-    pass
+    raise NotImplemented()
 
 
 def rm():
-    pass
+    raise NotImplemented()
 
 
 def checksum():
-    pass
+    raise NotImplemented()
 
 
 def exists():
-    pass
+    raise NotImplemented()
 
 
 def isfile():
-    pass
+    raise NotImplemented()
 
 
 def isdir():
-    pass
+    raise NotImplemented()
 
 
 def chown():
-    pass
+    raise NotImplemented()
 
 
 def chmod():
-    pass
+    raise NotImplemented()
 
 
 def join(*args):

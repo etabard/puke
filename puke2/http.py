@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from .dependencies import requests
-from .dependencies.requests import auth, exceptions
+from .dependencies.requests import exceptions
+from .dependencies.requests.auth import (
+    HTTPBasicAuth as Basic,
+    HTTPDigestAuth as Digest
+)
 from .settings.http import ALLOWABLE_CACHING_CODES, DEFAULT_CACHE, TTL
 from . import cache
 

@@ -12,6 +12,18 @@ from . import cache
 from . import system
 from . import utils
 from . import fs
+from . import log
+from . import exceptions
+from . import js
+from . import css
+from . import tools
+from . import experimental
+from . import display
+from . import logging
+from . import tasks
+from .dependencies import sh
+
+
 from os import environ as env
 
 cache.internal = cache.FileSystemCache()
