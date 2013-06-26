@@ -6,7 +6,7 @@ import sys
 import puke2 as puke
 
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
 except ImportError:
     from distutils.core import setup
 
@@ -15,11 +15,16 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 packages = [
-    'puke2'
+    'puke2',
+    'puke2.dependencies.requests'
 ]
 
-requires = []
- 
+requires = [
+    'psutil'
+]
+
+
+print(find_packages())
 setup(
     name=puke.__title__,
     version=puke.__version__,
@@ -36,6 +41,11 @@ setup(
     install_requires=requires,
     license=open('LICENSE').read(),
     zip_safe=False,
+    entry_points={
+        'console_scripts': [
+            'puke2 = puke2:main',
+        ]
+    },
     classifiers=(
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

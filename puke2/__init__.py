@@ -9,5 +9,9 @@ __copyright__ = 'Copyright 2011-2013 Web It Up, Emmanuel Tabard'
 
 from . import http
 from . import cache
+from . import system
 
 cache.internal = cache.FileSystemCache()
+
+def main():
+  print('\o/')
