@@ -102,7 +102,10 @@ string::substr(){
 
 ui::header "Welcome to the puke for OSX installer"
 
-
+ui::info "This script will install puke on your system."
+ui::info "The recommended way require using homebrew - though you can also install it using the system provided python."
+ui::info "If you don't have homebrew yet and don't want to install puke the system way, please check now that you have XCode (or XCode command line tools) installed."
+ui::confirm
 
 # Do we already have puke?
 if [[ "`which puke`" ]]; then
