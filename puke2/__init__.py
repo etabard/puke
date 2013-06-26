@@ -11,6 +11,7 @@ from . import http
 from . import cache
 from . import system
 from . import utils
+from os import environ as env
 
 cache.internal = cache.FileSystemCache()
 
