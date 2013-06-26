@@ -1,40 +1,50 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
 
+import os
+import sys
 
-from setuptools import setup, find_packages
-import sys, os
-import pkg_resources
+import puke2 as puke
 
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
-major, minor = sys.version_info[:2]
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py sdist upload')
+    sys.exit()
 
-if major < 2 and minor < 6:
-    raise Exception("Puke requires Python 2.6")
-import logging
+packages = [
+    'puke2'
+]
 
+requires = []
+ 
 setup(
-    name = "puke",
-    version = "1.5.21",
-    packages = ['puke'],
+    name=puke.__title__,
+    version=puke.__version__,
+    description='A straightforward and versatile build system written in python',
+    long_description=open('README.md').read() + '\n\n' +
+                     open('HISTORY.md').read(),
+    author=puke.__author__,
+    author_email='manu@webitup.fr',
+    url='http://puke.webitup.fr',
+    packages=packages,
+    package_data={'': ['LICENSE'], 'puke2': ['*.pem']},
+    package_dir={'puke2': 'puke2'},
+    include_package_data=True,
+    install_requires=requires,
+    license=open('LICENSE').read(),
+    zip_safe=False,
+    classifiers=(
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'Natural Language :: English',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Software Development :: Build Tools'
 
-    scripts = [
-       'bin/puke',
-       'bin/puke.js.compress',
-       'bin/puke.css.compress'
-    ],
-
-    # Project uses reStructuredText, so ensure that the docutils get
-    # installed or upgraded on the target machine
-    install_requires = ['pyscss', 'closure_linter', 'colorama', 'pyyaml', 'paramiko', 'requests==1.2.1'],
-    dependency_links = ['http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz'],
-  
-    # metadata for upload to PyPI
-    author = "Emmanuel Tabard",
-    author_email = "manu@webitup.fr",
-    description = "Puke is a straightforward build system",
-    license = "http://www.gnu.org/copyleft/gpl.html",
-    keywords = "build system python",
-    url = 'http://github.com/webitup/puke',
-    include_package_data = True
+    ),
 )
