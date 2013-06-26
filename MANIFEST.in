@@ -1,1 +1,1 @@
-recursive-include puke datas *
+recursive-include puke2 dependencies *

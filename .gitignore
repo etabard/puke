@@ -4,3 +4,6 @@
 *.swp
 *.egg
 *.egg-info
+puke2.sublime-workspace
+puke2.sublime-project
+.pukecache

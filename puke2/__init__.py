@@ -6,3 +6,8 @@ __build__ = hex(1)
 __author__ = 'Emmanuel Tabard'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2011-2013 Web It Up, Emmanuel Tabard'
+
+from . import http
+from . import cache
+
+cache.internal = cache.FileSystemCache()
