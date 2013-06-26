@@ -24,8 +24,6 @@ from . import tasks
 from .dependencies import sh
 
 
-from os import environ as env
-
 cache.internal = cache.FileSystemCache()
 
 

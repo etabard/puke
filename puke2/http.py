@@ -12,6 +12,7 @@ from . import cache
 
 class CacheableSession(requests.Session):
     CACHEABLE = DEFAULT_CACHE
+    TTL = TTL
 
     def __init__(self):
         super(CacheableSession, self).__init__()
@@ -40,17 +41,21 @@ def to_cache(r, *args, **kw):
     if not r.status_code in ALLOWABLE_CACHING_CODES:
         return r
 
-    cache.internal.set(r.url, r, TTL)
+    cache.internal.set(r.url, r, CacheableSession.TTL)
     return r
 
 
 def get(url, **kwargs):
     CacheableSession.CACHEABLE = DEFAULT_CACHE
-    if 'cache' in kwargs:
-        CacheableSession.CACHEABLE = kwargs['cache']
+    CacheableSession.TTL = TTL
 
     if 'cache' in kwargs:
+        CacheableSession.CACHEABLE = kwargs['cache']
         kwargs.pop('cache', None)
+
+    if 'ttl' in kwargs:
+        CacheableSession.TTL = kwargs['ttl']
+        kwargs.pop('ttl', None)
 
     if CacheableSession.CACHEABLE:
         kwargs['hooks'] = dict(response=to_cache)

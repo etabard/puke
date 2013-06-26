@@ -7,6 +7,8 @@ import re
 import functools
 import operator
 
+from os import environ as env
+
 
 def quacks_like_dict(object):
     """Check if object is dict-like"""
