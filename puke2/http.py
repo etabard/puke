@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 from .dependencies import requests
+from .dependencies.requests import auth, exceptions
 from .settings.http import ALLOWABLE_CACHING_CODES, DEFAULT_CACHE, TTL
 from . import cache
 
