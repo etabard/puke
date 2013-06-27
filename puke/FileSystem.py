@@ -140,8 +140,19 @@ def isdir(dirname):
     return True
 
 def symlink(source, symlink):
-    if os.path.exists(os.readlink(symlink)):
-        os.symlink(source, symlink)
+    if not os.path.exists(symlink):
+
+        try:
+            os.readlink(symlink)
+            exist = True
+        except OSError:
+            exist = False
+
+        if exist and not os.path.exists(symlink):
+            os.remove(symlink)
+            os.symlink(source, symlink)
+        elif not exist:
+            os.symlink(source, symlink)
 
 def writefile(dst, content, mtime = None, binary = False):
     dst = realpath(dst)
