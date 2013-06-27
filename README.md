@@ -1,3 +1,5 @@
+<!!!> New puke ahead! Read https://github.com/webitup/puke/wiki <!!!>
+
 # Building: puke it right
 
 <pre>
