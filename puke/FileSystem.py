@@ -9,15 +9,15 @@ import requests
 
 def makedir(dirname):
     """ Creates missing hierarchy levels for given directory """
-    
+
     if dirname == "":
         return
-    
+
     dirname = realpath(dirname)
 
     if exists(dirname) and isfile(dirname):
         raise FileSystemError("%s is a file. Cannot create a directory" % dirname)
-        
+
     if not os.path.exists(dirname):
         try:
             os.makedirs(dirname)
@@ -61,64 +61,64 @@ def checksum (file):
     finally:
         if fh:
             fh.close()
-    
-    
+
+
     return md5.hexdigest()
 
 def remove(file):
-    file = realpath(file)
+    file = abspath(file)
     if not file or file in ['./', '/', '~/', '~', '.', '..', '../']:
         raise FileSystemError('Invalid path %s' % file)
-    
+
     try:
-        if os.path.isfile(file):
+        if os.path.isfile(file) or os.path.islink(file):
             os.remove(file)
         else:
             shutil.rmtree(file)
     except Exception as e:
         raise FileSystemError( "Error removing %s : %s" % (file , e))
-    
+
 
 def copyfile(src, dst, force = False):
     src = realpath(src)
     dst = realpath(dst)
     """ Copy src file to dst file. Both should be filenames, not directories. """
-    
+
     if not os.path.isfile(src):
         raise FileSystemError("No such file: %s" % src)
-    
+
 
     try:
         dst_mtime = os.path.getmtime(dst)
         src_mtime = os.path.getmtime(src)
-        
+
         # Only accecpt equal modification time as equal as copyfile()
         # syncs over the mtime from the source.
         if force and src_mtime <= dst_mtime:
             return False
-        
+
     except OSError:
         # destination file does not exist, so mtime check fails
         pass
 
     # First test for existance of destination directory
     makedir(os.path.dirname(dst))
-    
+
     # Finally copy file to directory
     try:
         shutil.copy2(src, dst)
     except IOError as ex:
         raise FileSystemError("Could not write file %s: %s" % (dst, ex))
-        
+
     return True
-    
+
 def exists(src):
     src = realpath(src)
     if not os.path.exists(src):
         return False
 
     return True
-    
+
 def isfile(src):
     src = realpath(src)
     if not exists(src):
@@ -139,12 +139,26 @@ def isdir(dirname):
 
     return True
 
+def symlink(source, symlink):
+    if not os.path.exists(symlink):
+
+        try:
+            os.readlink(symlink)
+            exist = True
+        except OSError:
+            exist = False
+
+        if exist and not os.path.exists(symlink):
+            os.remove(symlink)
+            os.symlink(source, symlink)
+        elif not exist:
+            os.symlink(source, symlink)
 
 def writefile(dst, content, mtime = None, binary = False):
     dst = realpath(dst)
     # First test for existance of destination directory
     makedir(os.path.dirname(dst))
-    
+
     # Open file handle and write
     if binary:
         mode = "wb"
@@ -198,11 +212,11 @@ def chown(path, uname = None, gname = None):
 
     if not isinstance(uname, int) and uname != None:
         uid = getUid(uname)
-    
+
     if not isinstance(gname, int) and gname != None:
         gid = getGid(gname)
 
-    
+
     if uid == None or gid == None:
         raise FileSystemError('CHOWN %s : Invalid uname or gname (%s->%s:%s->%s)' % (path, uname, uid, gname, gid))
 
@@ -217,7 +231,7 @@ def chmod(path, mode):
         mode = Utils.octalmode(path, mode)
     else:
         mode = int("%s" % mode, 8)
-    
+
     return os.chmod(path, mode)
 
 def getUid(name):

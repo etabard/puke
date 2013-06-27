@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 import platform
 
@@ -62,21 +62,21 @@ def run():
     parser.add_option("-f", "--file", dest="file", help="Use the given build script")
     parser.add_option("-p", "--patch",action="store_true",  dest="patch", help="Patch closure")
     parser.add_option("-i", "--info",action="store_true",  dest="info", help="puke task --info show task informations")
-    
-    if sys.platform.lower() == "darwin":
-        parser.add_option("-s", "--speak",action="store_true",  dest="speak", help="puke speaks on fail/success")
 
+    if sys.platform.lower() == "darwin":
+        parser.add_option("-s", "--speak", action="store_true",  dest="speak",
+                          help="puke speaks on fail/success")
 
     (options, args) = parser.parse_args()
 
-    if options.speak:
+    if hasattr(options, 'speak'):
         Console.SPEAK_ENABLED = True
 
     rLog = logging.getLogger('requests')
     rLog.setLevel(logging.WARNING)
     #
     # Configure logging
-    # 
+    #
 
     if options.logfile:
         logging.basicConfig(filename=options.logfile, level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -91,11 +91,11 @@ def run():
             logging.getLogger().setLevel(logging.INFO)
 
 
-    
-    
 
 
-    
+
+
+
     # Define a Handler which writes INFO messages or higher to the sys.stderr
     consoleCfg = logging.StreamHandler()
 
@@ -105,7 +105,7 @@ def run():
         consoleCfg.setLevel(logging.WARN)
     else:
         consoleCfg.setLevel(logging.INFO)
-    
+
     if os.environ.get("NOCOLOR"):
         consoleCfg.setFormatter(logging.Formatter( ' %(message)s' , '%H:%M:%S'))
     else:
@@ -120,17 +120,17 @@ def run():
     try:
         closure = pkg_resources.get_distribution('closure_linter').location
         closure_lock = os.path.join(closure, 'closure_linter', 'puke.lock')
-        
+
         if options.patch or not os.path.isfile(closure_lock):
             closure = os.path.join(closure, 'closure_linter', 'ecmalintrules.py')
-            
+
             try:
                 handle = source = destination = None
                 import shutil
                 shutil.move( closure, closure+"~" )
                 destination= open( closure, "w" )
                 source= open( closure+"~", "r" )
-                
+
                 content = source.read()
                 content = content.replace('MAX_LINE_LENGTH = 80', 'MAX_LINE_LENGTH = 120')
                 destination.write(content)
@@ -155,7 +155,7 @@ def run():
                     source.close()
                 if destination:
                     destination.close()
-                
+
                 if options.patch:
                     sys.exit(0)
 
@@ -179,9 +179,9 @@ def run():
     #
     # Find and execute build script
     #
-    
+
     pukefiles = ["pukefile", "pukeFile", "pukefile", "pukefile.py", "pukeFile.py", "pukefile.py"]
-    
+
     script = None
     if options.file:
         if os.path.isfile(options.file):
@@ -196,7 +196,7 @@ def run():
             raise PukeError("No generate file '%s' found!" % options.file)
         else:
             raise PukeError("No generate file found!")
-    
+
     retval = execfile(script)
 
     #
@@ -209,9 +209,9 @@ def run():
         printTasks()
         sys.exit(0)
 
-   
 
-    
+
+
     if options.clearcache:
         console.header("Spring time, cleaning all the vomit around ...")
         console.log("...")
@@ -220,7 +220,7 @@ def run():
         else:
             console.confirm("Your room is already tidy, good boy :-) \n")
         sys.exit(0)
-    
+
     try:
         args = args.strip()
     except:
@@ -241,7 +241,7 @@ def run():
             printHelp(name.strip())
         else:
             executeTask(name.strip(), *args)
-                
+
 
 
 def gettraceback(level = 0):
@@ -254,23 +254,23 @@ def gettraceback(level = 0):
         exception += entry
     tb_list = traceback.format_tb(sys.exc_info()[2])
     for entry in tb_list[reverse]:
-        trace += entry  
-    return trace  
+        trace += entry
+    return trace
 
 def main():
     try:
         run()
-    
+
     except Exception as error:
 
         console.fail("\n\n :puke: \n PUKE %s \n %s \n" % (error, gettraceback()))
 
         sys.exit(1)
-        
+
     except KeyboardInterrupt:
         console.warn("\n\n :puke: \nBuild interrupted!\n")
         sys.exit(2)
-    
+
     if Console.SPEAK_ENABLED and Console.SPEAK_MESSAGE_ON_SUCCESS:
         console.say(Console.SPEAK_MESSAGE_ON_SUCCESS)
 
