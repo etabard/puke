@@ -66,12 +66,12 @@ def checksum (file):
     return md5.hexdigest()
 
 def remove(file):
-    file = realpath(file)
+    file = abspath(file)
     if not file or file in ['./', '/', '~/', '~', '.', '..', '../']:
         raise FileSystemError('Invalid path %s' % file)
 
     try:
-        if os.path.isfile(file):
+        if os.path.isfile(file) or os.path.islink(file):
             os.remove(file)
         else:
             shutil.rmtree(file)
