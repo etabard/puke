@@ -53,6 +53,9 @@ def copyfile(sourcepath, destpath, force=False):
     sourcepath = resolvepath(sourcepath)
     destpath = resolvepath(destpath)
 
+    if not exists(sourcepath):
+        raise exceptions.FileNotFound(abspath(sourcepath))
+
     if isdir(sourcepath):
         raise exceptions.UnexpectedDirectory(abspath(sourcepath))
 
