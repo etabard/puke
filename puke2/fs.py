@@ -243,23 +243,23 @@ def join(*args):
 
 
 def abspath(path):
-    return os.path.abspath(path)
+    return os.path.abspath(resolvepath(path))
 
 
 def basename(path):
-    return os.path.basename(path)
+    return os.path.basename(resolvepath(path))
 
 
 def dirname(path):
-    return os.path.dirname(path)
+    return os.path.dirname(resolvepath(path))
 
 
 def normpath(path):
-    return os.path.normpath(path)
+    return os.path.normpath(resolvepath(path))
 
 
 def relpath(path):
-    return os.path.relpath(path)
+    return os.path.relpath(resolvepath(path))
 
 
 def sep():
