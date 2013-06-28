@@ -83,6 +83,12 @@ def readfile(path):
     data = None
     fh = None
 
+    if not exists(path):
+        raise exceptions.FileNotFound(abspath(path))
+
+    if isdir(path):
+        raise exceptions.UnexpectedDirectory(abspath(path))
+
     try:
         fh = open(path)
         data = fh.read()
