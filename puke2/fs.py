@@ -7,6 +7,7 @@ import shutil
 import hashlib
 from . import exceptions
 from .settings.fs import RM_SECURITY
+from .utils import octalmode
 
 MD5 = "md5"
 SHA1 = "sha1"
@@ -19,7 +20,9 @@ def HandleOsError(func, *args, **kwargs):
             return func(*args, **kwargs)
         except OSError as exc:
             if exc.errno in (1, 13):
-                raise exceptions.PermissionDenied(args)
+                raise exceptions.PermissionDenied(args[0])
+            elif exc.errno == 2:
+                raise exceptions.PathNotFound(args[0])
             else:
                 raise exc
 
@@ -192,8 +195,13 @@ def chown(path, uname=None, gname=None):
 
 
 @HandleOsError
-def chmod():
-    raise NotImplemented()
+def chmod(path, mode):
+    path = resolvepath(path)
+
+    if not isinstance(mode, int):
+        mode = octalmode(path, mode)
+
+    os.chmod(path, mode)
 
 
 def join(*args):
