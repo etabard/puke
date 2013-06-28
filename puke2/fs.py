@@ -79,7 +79,7 @@ def copyfile(sourcepath, destpath, force=False):
 
 @HandleOsError
 def readfile(path):
-    path = realpath(path)
+    path = resolvepath(path)
     data = None
     fh = None
 
