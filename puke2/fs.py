@@ -20,7 +20,7 @@ def HandleOsError(func, *args, **kwargs):
         try:
             return func(*args, **kwargs)
         except (OSError, IOError) as exc:
-            message = '%s "%s"' % (exc.strerror, exc.filename)
+            message = abspath(exc.filename)
             # See http://docs.python.org/2/library/errno.html
             if exc.errno in (
                 errno.EPERM,  # Operation not permitted
@@ -43,7 +43,7 @@ def mkdir(path):
         return True
 
     if exists(path):
-        raise exceptions.FileExists(path)
+        raise exceptions.FileExists(abspath(path))
 
     os.makedirs(path)
 
@@ -54,7 +54,7 @@ def copyfile(sourcepath, destpath, force=False):
     destpath = resolvepath(destpath)
 
     if isdir(sourcepath):
-        raise exceptions.UnexpectedDirectory(sourcepath)
+        raise exceptions.UnexpectedDirectory(abspath(sourcepath))
 
     try:
         src_mtime = os.path.getmtime(sourcepath)
@@ -100,10 +100,10 @@ def writefile():
 @HandleOsError
 def symlink(source, symlink):
     if exists(symlink):
-        raise exceptions.FileExists(symlink)
+        raise exceptions.FileExists(abspath(symlink))
 
     if not exists(source):
-        raise exceptions.PathNotFound(source)
+        raise exceptions.PathNotFound(abspath(source))
 
     try:
         #dead symlink
@@ -141,7 +141,7 @@ def rm(path):
 @HandleOsError
 def checksum(path, algo=MD5):
     if not exists(path):
-        raise exceptions.PathNotFound(path)
+        raise exceptions.PathNotFound(abspath(path))
 
     path = realpath(path)
 
@@ -176,7 +176,7 @@ def exists(path):
 @HandleOsError
 def isfile(path, followSymlink=False):
     if not exists(path):
-        raise exceptions.FileNotFound(path)
+        raise exceptions.FileNotFound(abspath(path))
 
     if not followSymlink and islink(path):
         return False
@@ -187,7 +187,7 @@ def isfile(path, followSymlink=False):
 @HandleOsError
 def isdir(path, followSymlink=False):
     if not exists(path):
-        raise exceptions.DirectoryNotFound(path)
+        raise exceptions.DirectoryNotFound(abspath(path))
 
     if not followSymlink and islink(path):
         return False
@@ -198,7 +198,7 @@ def isdir(path, followSymlink=False):
 @HandleOsError
 def islink(path):
     if not exists(path):
-        raise exceptions.SymlinkNotFound(path)
+        raise exceptions.SymlinkNotFound(abspath(path))
 
     return os.path.islink(resolvepath(path))
 
@@ -256,6 +256,10 @@ def dirname(path):
 
 def normpath(path):
     return os.path.normpath(path)
+
+
+def relpath(path):
+    return os.path.relpath(path)
 
 
 def sep():
