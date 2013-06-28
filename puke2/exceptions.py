@@ -48,3 +48,11 @@ class FileExists(FileSystemError):
 
 class DirectoryExists(FileSystemError):
     pass
+
+
+class IllegalUserName(FileSystemError):
+    pass
+
+
+class IllegalGroupName(FileSystemError):
+    pass

@@ -12,6 +12,20 @@ MD5 = "md5"
 SHA1 = "sha1"
 
 
+def HandleOsError(func, *args, **kwargs):
+
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except OSError as exc:
+            if exc.errno == 13:
+                raise exceptions.PermissionDenied(args)
+            else:
+                raise exc
+
+    return wrapper
+
+
 class FileList(object):
     pass
 
@@ -20,6 +34,7 @@ def find():
     raise NotImplemented()
 
 
+@HandleOsError
 def mkdir(path):
     if exists(path) and isdir(path):
         return True
@@ -27,27 +42,25 @@ def mkdir(path):
     if exists(path):
         raise exceptions.FileExists(path)
 
-    try:
-        os.makedirs(path)
-    except OSError as exc:
-        if exc.errno == 13:
-            raise exceptions.PermissionDenied(path)
-        else:
-            raise exc
+    os.makedirs(path)
 
 
+@HandleOsError
 def copyfile():
     raise NotImplemented()
 
 
+@HandleOsError
 def readfile():
     raise NotImplemented()
 
 
+@HandleOsError
 def writefile():
     raise NotImplemented()
 
 
+@HandleOsError
 def symlink(source, symlink):
     if exists(symlink):
         raise exceptions.FileExists(symlink)
@@ -68,6 +81,7 @@ def symlink(source, symlink):
     os.symlink(source, symlink)
 
 
+@HandleOsError
 def rm(path):
     path = abspath(resolvepath(path))
 
@@ -81,18 +95,13 @@ def rm(path):
                 % (path, RM_SECURITY)
             )
 
-    try:
-        if isfile(path) or islink(path):
-            os.remove(path)
-        else:
-            shutil.rmtree(path)
-    except OSError as exc:
-        if exc.errno == 13:
-            raise exceptions.PermissionDenied(path)
-        else:
-            raise exc
+    if isfile(path) or islink(path):
+        os.remove(path)
+    else:
+        shutil.rmtree(path)
 
 
+@HandleOsError
 def checksum(path, algo=MD5):
     if not exists(path):
         raise exceptions.PathNotFound(path)
@@ -109,29 +118,25 @@ def checksum(path, algo=MD5):
     data = None
     fh = None
     block_size = 2**20
-    try:
-        fh = open(path, 'rb')
-        while True:
-            data = fh.read(block_size)
-            if not data:
-                break
-            hashalgo.update(data)
-    except OSError as exc:
-        if exc.errno == 13:
-            raise exceptions.PermissionDenied(path)
-        else:
-            raise exc
-    finally:
-        if fh:
-            fh.close()
+    fh = open(path, 'rb')
+
+    while True:
+        data = fh.read(block_size)
+        if not data:
+            break
+        hashalgo.update(data)
+
+    fh.close()
 
     return hashalgo.hexdigest()
 
 
+@HandleOsError
 def exists(path):
     return os.path.exists(resolvepath(path))
 
 
+@HandleOsError
 def isfile(path, followSymlink=False):
     if not exists(path):
         raise exceptions.FileNotFound(path)
@@ -142,6 +147,7 @@ def isfile(path, followSymlink=False):
     return os.path.isfile(resolvepath(path))
 
 
+@HandleOsError
 def isdir(path, followSymlink=False):
     if not exists(path):
         raise exceptions.DirectoryNotFound(path)
@@ -152,6 +158,7 @@ def isdir(path, followSymlink=False):
     return os.path.isdir(resolvepath(path))
 
 
+@HandleOsError
 def islink(path):
     if not exists(path):
         raise exceptions.SymlinkNotFound(path)
@@ -159,10 +166,32 @@ def islink(path):
     return os.path.islink(resolvepath(path))
 
 
-def chown():
-    raise NotImplemented()
+@HandleOsError
+def chown(path, uname=None, gname=None):
+    path = resolvepath(path)
+
+    if not uname:
+        uid = os.stat(path).st_uid
+
+    if not gname:
+        gid = os.stat(path).st_gid
+
+    if not isinstance(uname, int) and uname is not None:
+        uid = getUid(uname)
+
+    if not isinstance(gname, int) and gname is not None:
+        gid = getGid(gname)
+
+    if not uid:
+        raise exceptions.IllegalUserName(uname)
+
+    if not gid:
+        raise exceptions.IllegalGroupName(gname)
+
+    os.chown(path, uid, gid)
 
 
+@HandleOsError
 def chmod():
     raise NotImplemented()
 
@@ -197,3 +226,17 @@ def resolvepath(path):
 
 def realpath(path):
     return os.path.realpath(resolvepath(path))
+
+
+def getUid(name):
+    try:
+        return pwd.getpwnam(name)[2]
+    except:
+        return None
+
+
+def getGid(name):
+    try:
+        return grp.getgrnam(name)[2]
+    except:
+        return None
