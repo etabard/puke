@@ -2,8 +2,8 @@
 
 
 def check():
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def version():
-    raise NotImplemented()
+    raise NotImplementedError()

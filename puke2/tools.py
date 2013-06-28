@@ -2,16 +2,16 @@
 
 
 def patch():
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 class VirtualEnv():
 
     def __init__():
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 def Config():
 
     def __init__():
-        raise NotImplemented()
+        raise NotImplementedError()

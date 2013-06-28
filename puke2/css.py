@@ -2,12 +2,12 @@
 
 
 def minify():
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def tidy():
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def compile():
-    raise NotImplemented()
+    raise NotImplementedError()

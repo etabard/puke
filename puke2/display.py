@@ -2,36 +2,36 @@
 
 
 def header(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def say(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def prompt(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def list(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def table(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def fail(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def info(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def warn(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def password(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()

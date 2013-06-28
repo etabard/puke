@@ -4,6 +4,7 @@ import time
 import pwd
 import grp
 import shutil
+import errno
 import hashlib
 from . import exceptions
 from .settings.fs import RM_SECURITY
@@ -18,23 +19,19 @@ def HandleOsError(func, *args, **kwargs):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except OSError as exc:
-            if exc.errno in (1, 13):
+        except (OSError, IOError) as exc:
+            # See http://docs.python.org/2/library/errno.html
+            if exc.errno in (
+                errno.EPERM,  # Operation not permitted
+                errno.EACCES  # Permission denied
+            ):
                 raise exceptions.PermissionDenied(args[0])
-            elif exc.errno == 2:
+            elif exc.errno == errno.ENOENT:
                 raise exceptions.PathNotFound(args[0])
             else:
                 raise exc
 
     return wrapper
-
-
-class FileList(object):
-    pass
-
-
-def find():
-    raise NotImplemented()
 
 
 @HandleOsError
@@ -49,18 +46,34 @@ def mkdir(path):
 
 
 @HandleOsError
-def copyfile():
-    raise NotImplemented()
+def copyfile(sourcepath, destpath):
+    sourcepath = resolvepath(sourcepath)
+    destpath = resolvepath(destpath)
+
+    
 
 
 @HandleOsError
-def readfile():
-    raise NotImplemented()
+def readfile(path):
+    path = realpath(path)
+    data = None
+    fh = None
+
+    try:
+        fh = open(path)
+        data = fh.read()
+    except (OSError, IOError) as exc:
+        raise exc
+    finally:
+        if fh:
+            fh.close()
+
+    return data
 
 
 @HandleOsError
 def writefile():
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 @HandleOsError
@@ -116,7 +129,7 @@ def checksum(path, algo=MD5):
     elif algo == MD5:
         hashalgo = hashlib.md5()
     else:
-        raise NotImplemented()
+        raise NotImplementedError()
 
     data = None
     fh = None

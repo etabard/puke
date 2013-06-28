@@ -2,16 +2,16 @@
 
 
 def minify():
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def lint():
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def doc():
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def hint():
-    raise NotImplemented()
+    raise NotImplementedError()

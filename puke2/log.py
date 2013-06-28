@@ -2,16 +2,16 @@
 
 
 def info(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def warning(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def error(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
 
 
 def critical(*args, **kwargs):
-    raise NotImplemented()
+    raise NotImplementedError()
