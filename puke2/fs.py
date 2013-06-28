@@ -8,6 +8,9 @@ import hashlib
 from . import exceptions
 from .settings.fs import RM_SECURITY
 
+MD5 = "md5"
+SHA1 = "sha1"
+
 
 class FileList(object):
     pass
@@ -90,8 +93,39 @@ def rm(path):
             raise exc
 
 
-def checksum():
-    raise NotImplemented()
+def checksum(path, algo=MD5):
+    if not exists(path):
+        raise exceptions.PathNotFound(path)
+
+    path = realpath(path)
+
+    if algo == SHA1:
+        hashalgo = hashlib.sha1()
+    elif algo == MD5:
+        hashalgo = hashlib.md5()
+    else:
+        raise NotImplemented()
+
+    data = None
+    fh = None
+    block_size = 2**20
+    try:
+        fh = open(path, 'rb')
+        while True:
+            data = fh.read(block_size)
+            if not data:
+                break
+            hashalgo.update(data)
+    except OSError as exc:
+        if exc.errno == 13:
+            raise exceptions.PermissionDenied(path)
+        else:
+            raise exc
+    finally:
+        if fh:
+            fh.close()
+
+    return hashalgo.hexdigest()
 
 
 def exists(path):
