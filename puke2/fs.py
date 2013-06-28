@@ -20,14 +20,17 @@ def HandleOsError(func, *args, **kwargs):
         try:
             return func(*args, **kwargs)
         except (OSError, IOError) as exc:
+            message = '%s "%s"' % (exc.strerror, exc.filename)
             # See http://docs.python.org/2/library/errno.html
             if exc.errno in (
                 errno.EPERM,  # Operation not permitted
                 errno.EACCES  # Permission denied
             ):
-                raise exceptions.PermissionDenied(args[0])
+                raise exceptions.PermissionDenied(message)
             elif exc.errno == errno.ENOENT:
-                raise exceptions.PathNotFound(args[0])
+                raise exceptions.PathNotFound(message)
+            elif exc.errno == errno.EISDIR:
+                raise exceptions.UnexpectedDirectory(message)
             else:
                 raise exc
 
@@ -46,11 +49,29 @@ def mkdir(path):
 
 
 @HandleOsError
-def copyfile(sourcepath, destpath):
+def copyfile(sourcepath, destpath, force=False):
     sourcepath = resolvepath(sourcepath)
     destpath = resolvepath(destpath)
 
-    
+    if isdir(sourcepath):
+        raise exceptions.UnexpectedDirectory(sourcepath)
+
+    try:
+        src_mtime = os.path.getmtime(sourcepath)
+    except:
+        src_mtime = 0
+
+    try:
+        dst_mtime = os.path.getmtime(destpath)
+    except:
+        dst_mtime = 0
+
+    if not force and src_mtime == dst_mtime:
+        return False
+
+    shutil.copy2(sourcepath, destpath)
+
+    return True
 
 
 @HandleOsError

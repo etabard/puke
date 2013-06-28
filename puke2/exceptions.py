@@ -46,6 +46,10 @@ class FileExists(FileSystemError):
     pass
 
 
+class UnexpectedDirectory(FileSystemError):
+    pass
+
+
 class DirectoryExists(FileSystemError):
     pass
 
