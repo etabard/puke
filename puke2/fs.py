@@ -18,7 +18,7 @@ def HandleOsError(func, *args, **kwargs):
         try:
             return func(*args, **kwargs)
         except OSError as exc:
-            if exc.errno == 13:
+            if exc.errno in (1, 13):
                 raise exceptions.PermissionDenied(args)
             else:
                 raise exc
@@ -182,10 +182,10 @@ def chown(path, uname=None, gname=None):
     if not isinstance(gname, int) and gname is not None:
         gid = getGid(gname)
 
-    if not uid:
+    if uid is None:
         raise exceptions.IllegalUserName(uname)
 
-    if not gid:
+    if gid is None:
         raise exceptions.IllegalGroupName(gname)
 
     os.chown(path, uid, gid)
