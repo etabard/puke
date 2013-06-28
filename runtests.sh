@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 chmod -R a+rwx tests/tmp
 rm -Rf tests/tmp
