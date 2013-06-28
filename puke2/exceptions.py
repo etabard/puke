@@ -13,7 +13,20 @@ class PukefileNotFound(PukeException):
     pass
 
 
-class PathNotFound(PukeException):
+#FileSystem
+class FileSystemError(PukeException):
+    pass
+
+
+class PermissionDenied(FileSystemError):
+    pass
+
+
+class SecurityError(FileSystemError):
+    pass
+
+
+class PathNotFound(FileSystemError):
     pass
 
 
@@ -29,5 +42,9 @@ class SymlinkNotFound(PathNotFound):
     pass
 
 
-class FileExists(PukeException):
+class FileExists(FileSystemError):
+    pass
+
+
+class DirectoryExists(FileSystemError):
     pass

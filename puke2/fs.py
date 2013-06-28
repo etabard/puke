@@ -6,6 +6,7 @@ import grp
 import shutil
 import hashlib
 from . import exceptions
+from .settings.fs import RM_SECURITY
 
 
 class FileList(object):
@@ -16,8 +17,20 @@ def find():
     raise NotImplemented()
 
 
-def mkdir():
-    raise NotImplemented()
+def mkdir(path):
+    if exists(path) and isdir(path):
+        return True
+
+    if exists(path):
+        raise exceptions.FileExists(path)
+
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == 13:
+            raise exceptions.PermissionDenied(path)
+        else:
+            raise exc
 
 
 def copyfile():
@@ -52,8 +65,29 @@ def symlink(source, symlink):
     os.symlink(source, symlink)
 
 
-def rm():
-    raise NotImplemented()
+def rm(path):
+    path = abspath(resolvepath(path))
+
+    if not exists(path):
+        raise exceptions.PathNotFound(path)
+
+    for checkpath in RM_SECURITY:
+        if path == abspath(resolvepath(checkpath)):
+            raise exceptions.SecurityError(
+                "Cannot delete %s contained in security sandbox %s "
+                % (path, RM_SECURITY)
+            )
+
+    try:
+        if isfile(path) or islink(path):
+            os.remove(path)
+        else:
+            shutil.rmtree(path)
+    except OSError as exc:
+        if exc.errno == 13:
+            raise exceptions.PermissionDenied(path)
+        else:
+            raise exc
 
 
 def checksum():
