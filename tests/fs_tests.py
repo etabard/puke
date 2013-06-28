@@ -8,7 +8,8 @@ parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parentdir)
 import puke2
 
-root=os.path.join(os.path.dirname(os.path.abspath(__file__)), "tmp")
+# XXX will break windows obviously for now
+root="~/../../../..%s/tmp" % os.path.dirname(os.path.abspath(__file__))
 
 class ExistenceTest(unittest.TestCase):
   def test_exists(self):
@@ -154,7 +155,7 @@ class FileManipulationTest(unittest.TestCase):
       puke2.fs.readfile(p)
       self.assertTrue(False)
     except Exception as e:
-      self.assertIsInstance(e, puke2.exceptions.FileNotFound)
+      self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
       self.assertEqual(e.message, p)
 
     try:
@@ -267,7 +268,7 @@ class FileManipulationTest(unittest.TestCase):
       puke2.fs.copyfile(p, destination)
       self.assertTrue(False)
     except Exception as e:
-      self.assertIsInstance(e, puke2.exceptions.FileNotFound)
+      self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
       self.assertEqual(e.message, p)
 
     try:
@@ -275,7 +276,7 @@ class FileManipulationTest(unittest.TestCase):
       puke2.fs.copyfile(p, destination)
       self.assertTrue(False)
     except Exception as e:
-      self.assertIsInstance(e, puke2.exceptions.FileNotFound)
+      self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
       self.assertEqual(e.message, p)
 
     puke2.fs.copyfile(os.path.join(root, "file"), destination)
