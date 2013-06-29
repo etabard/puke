@@ -109,9 +109,7 @@ ui::confirm
 
 # Do we already have puke?
 if [[ "`which puke`" ]]; then
-  # XXX
-  # ui::error "Puke version `puke --version` is already installed. If you want to upgrade, just do: puke --upgrade"
-  ui::error "Puke version XXXXXFIXME is already installed. If you want to upgrade, just do: 'puke --upgrade'. \
+  ui::error "`puke --version` is already installed. If you want to upgrade, just do: 'puke --upgrade'. \
   If you want to uninstall, 'pip uninstall puke' as many times as necessary. \
   For more puke maintenance tasks, try 'puke --XXXFIXME'"
 fi
