@@ -6,7 +6,7 @@ mkdir -p tests/tmp/dir
 echo -n "ß" > tests/tmp/file
 ln -s dir tests/tmp/dirlink
 ln -s file tests/tmp/filelink
-ln -s dangling tests/tmp/danglinglink
+ln -s dangling/dangling/dangling tests/tmp/danglinglink
 
 mkdir -p tests/tmp/unreadabledir
 echo -n "ß" > tests/tmp/unreadablefile

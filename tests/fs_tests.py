@@ -207,13 +207,13 @@ class FileManipulationTest(unittest.TestCase):
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
   def test_write(self):
-    content="b"
+    content="♥"
     try:
       p=os.path.join(root, "dir")
       puke2.fs.writefile(p, content)
       self.assertTrue(False)
     except Exception as e:
-      self.assertIsInstance(e, puke2.exceptions.FileNotFound)
+      self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
     try:
@@ -221,25 +221,21 @@ class FileManipulationTest(unittest.TestCase):
       puke2.fs.writefile(p, content)
       self.assertTrue(False)
     except Exception as e:
-      self.assertIsInstance(e, puke2.exceptions.FileNotFound)
+      self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
     puke2.fs.writefile(os.path.join(root, "file"), content)
-    self.assertEqual(puke2.fs.readfile(os.path.join(root, "file")), "b")
+    self.assertEqual(puke2.fs.readfile(os.path.join(root, "file")), content)
+
     puke2.fs.writefile(os.path.join(root, "filelink"), "ß")
     self.assertEqual(puke2.fs.readfile(os.path.join(root, "filelink")), "ß")
-
-    puke2.fs.writefile(os.path.join(root, "newfile"), content)
-    self.assertEqual(puke2.fs.readfile(os.path.join(root, "newfile")), "b")
-
-    puke2.fs.rm(os.path.join(root, "newfile"))
 
     try:
       p=os.path.join(root, "unreadabledir")
       puke2.fs.writefile(p, content)
       self.assertTrue(False)
     except Exception as e:
-      self.assertIsInstance(e, puke2.exceptions.FileNotFound)
+      self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
     try:
@@ -250,20 +246,17 @@ class FileManipulationTest(unittest.TestCase):
       self.assertIsInstance(e, puke2.exceptions.PermissionDenied)
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
-    try:
-      p=os.path.join(root, "nonexistent")
-      puke2.fs.writefile(p, content)
-      self.assertTrue(False)
-    except Exception as e:
-      self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-      self.assertEqual(e.message, puke2.fs.abspath(p))
+    p=os.path.join(root, "nonexistent")
+    puke2.fs.writefile(p, content)
+    self.assertEqual(puke2.fs.readfile(os.path.join(root, "nonexistent")), content)
+    puke2.fs.rm(os.path.join(root, "nonexistent"))
 
     try:
       p=os.path.join(root, "danglinglink")
       puke2.fs.writefile(p, content)
       self.assertTrue(False)
     except Exception as e:
-      self.assertIsInstance(e, puke2.exceptions.FileNotFound)
+      self.assertIsInstance(e, puke2.exceptions.PathNotFound)
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
   def test_copy(self):
@@ -351,58 +344,42 @@ class FileManipulationTest(unittest.TestCase):
       self.assertIsInstance(e, puke2.exceptions.PathNotFound)
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
+  # Kind of m00t - none of these tests might work without root
+  def test_chown(self):
+    pass
+
 
 if __name__ == '__main__':
   unittest.main()
 
 
-# puke.fs.exists(path)
-# puke.fs.isfile(path, followSymlink=False)
-# puke.fs.isdir(path, followSymlink=False)
-# puke.fs.islink(path)
-
-# puke.fs.copyfile(sourcepath, destpath, force = False)
-# puke.fs.readfile(path)
-# puke.fs.writefile(path, content)
-
+# XXX still todo
 # puke.fs.chown(path, uname, gname=None, recursive=False)
-# puke.fs.chmod(path, mode, recursive=False)
-
-
 # puke.fs.mkdir(path)
 # puke.fs.rm(path)
 # puke.fs.symlink(source, linkpath)
 # puke.fs.checksum(path, hash="md5")
+# puke.fs.MD5 puke.fs.HA1
+
+# puke.fs.abspath(path) transforme en path absolue (~ et ..)
+# puke.fs.relpath(path) fournir une path relative par rapport à cwd
 
 # puke.fs.join(...)
 # puke.fs.basename(path)
 # puke.fs.dirname(path)
 
-# puke.fs.sep()
+
+
+
+
+
+
+
+
 # puke.fs.resolvepath(path) résoud les ~/
-# puke.fs.abspath(path) transforme en path absolue
 # puke.fs.normpath(path) collapse les /../
 # puke.fs.realpath(path) résoud les symlink
 
-# FileSystemError
-# PathNotFound
-# FileNotFound
-# DirectoryNotFound
-# SymlinkNotFound
-# FileExists
-# PermissionDenied
+# puke.fs.sep()
 
 
-# Method  Checks that New in
-# assertEqual(a, b) a == b   
-# assertNotEqual(a, b)  a != b   
-# assertTrue(x) bool(x) is True  
-# assertFalse(x)  bool(x) is False   
-# assertIs(a, b)  a is b  2.7
-# assertIsNot(a, b) a is not b  2.7
-# assertIsNone(x) x is None 2.7
-# assertIsNotNone(x)  x is not None 2.7
-# assertIn(a, b)  a in b  2.7
-# assertNotIn(a, b) a not in b  2.7
-# assertIsInstance(a, b)  isinstance(a, b)  2.7
-# assertNotIsInstance(a, b) not isinstance(a, b)  2.7
