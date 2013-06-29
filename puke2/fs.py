@@ -39,6 +39,9 @@ def HandleOsError(func, *args, **kwargs):
 
 @HandleOsError
 def mkdir(path):
+    if not path.strip():
+        return False
+
     if exists(path) and isdir(path):
         return True
 
@@ -102,8 +105,25 @@ def readfile(path):
 
 
 @HandleOsError
-def writefile():
-    raise NotImplementedError()
+def writefile(path, content, mtime=None, binary=False):
+    path = resolvepath(path)
+
+    mkdir(dirname(path))
+
+    mode = 'wb' if binary else 'w'
+    fh = None
+
+    try:
+        fh = open(path, mode)
+        fh.write(content)
+    except (OSError, IOError) as exc:
+        raise exc
+    finally:
+        if fh:
+            fh.close()
+
+    if mtime:
+        os.utime(path, (time.time(), mtime))
 
 
 @HandleOsError
