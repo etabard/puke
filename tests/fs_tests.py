@@ -8,6 +8,10 @@ parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parentdir)
 import puke2
 
+from stat import ST_MODE
+
+
+
 # XXX will break windows obviously for now
 root="~/../../../..%s/tmp" % os.path.dirname(os.path.abspath(__file__))
 
@@ -167,8 +171,8 @@ class FileManipulationTest(unittest.TestCase):
       self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
-    self.assertEqual(puke2.fs.readfile(os.path.join(root, "file")), "a")
-    self.assertEqual(puke2.fs.readfile(os.path.join(root, "filelink")), "a")
+    self.assertEqual(puke2.fs.readfile(os.path.join(root, "file")), "ß")
+    self.assertEqual(puke2.fs.readfile(os.path.join(root, "filelink")), "ß")
 
     try:
       p=os.path.join(root, "unreadabledir")
@@ -222,8 +226,8 @@ class FileManipulationTest(unittest.TestCase):
 
     puke2.fs.writefile(os.path.join(root, "file"), content)
     self.assertEqual(puke2.fs.readfile(os.path.join(root, "file")), "b")
-    puke2.fs.writefile(os.path.join(root, "filelink"), "a")
-    self.assertEqual(puke2.fs.readfile(os.path.join(root, "filelink")), "a")
+    puke2.fs.writefile(os.path.join(root, "filelink"), "ß")
+    self.assertEqual(puke2.fs.readfile(os.path.join(root, "filelink")), "ß")
 
     puke2.fs.writefile(os.path.join(root, "newfile"), content)
     self.assertEqual(puke2.fs.readfile(os.path.join(root, "newfile")), "b")
@@ -281,12 +285,12 @@ class FileManipulationTest(unittest.TestCase):
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
     puke2.fs.copyfile(os.path.join(root, "file"), destination)
-    self.assertEqual(puke2.fs.readfile(destination), "a")
+    self.assertEqual(puke2.fs.readfile(destination), "ß")
 
     puke2.fs.rm(destination)
 
     puke2.fs.copyfile(os.path.join(root, "filelink"), destination)
-    self.assertEqual(puke2.fs.readfile(destination), "a")
+    self.assertEqual(puke2.fs.readfile(destination), "ß")
 
     puke2.fs.rm(destination)
 
@@ -322,6 +326,30 @@ class FileManipulationTest(unittest.TestCase):
       self.assertIsInstance(e, puke2.exceptions.FileNotFound)
       self.assertEqual(e.message, puke2.fs.abspath(p))
 
+  def test_chmod(self):
+    for p in ["dir", "dirlink", "file", "filelink", "unreadabledir", "unreadablefile"]:
+      p=os.path.join(root, p)
+      puke2.fs.chmod(p, 0777)
+      self.assertEqual(oct(os.stat(puke2.fs.resolvepath(p))[ST_MODE])[-3:], "777")
+
+    puke2.fs.chmod(os.path.join(root, "unreadabledir"), 0000)
+    puke2.fs.chmod(os.path.join(root, "unreadablefile"), 0000)
+
+    try:
+      p=os.path.join(root, "nonexistent")
+      puke2.fs.chmod(p, 0777)
+      self.assertTrue(False)
+    except Exception as e:
+      self.assertIsInstance(e, puke2.exceptions.PathNotFound)
+      self.assertEqual(e.message, puke2.fs.abspath(p))
+
+    try:
+      p=os.path.join(root, "danglinglink")
+      puke2.fs.chmod(p, 0777)
+      self.assertTrue(False)
+    except Exception as e:
+      self.assertIsInstance(e, puke2.exceptions.PathNotFound)
+      self.assertEqual(e.message, puke2.fs.abspath(p))
 
 
 if __name__ == '__main__':
@@ -333,17 +361,19 @@ if __name__ == '__main__':
 # puke.fs.isdir(path, followSymlink=False)
 # puke.fs.islink(path)
 
+# puke.fs.copyfile(sourcepath, destpath, force = False)
+# puke.fs.readfile(path)
+# puke.fs.writefile(path, content)
+
+# puke.fs.chown(path, uname, gname=None, recursive=False)
+# puke.fs.chmod(path, mode, recursive=False)
 
 
 # puke.fs.mkdir(path)
 # puke.fs.rm(path)
-# puke.fs.copyfile(sourcepath, destpath, force = False)
-# puke.fs.readfile(path)
-# puke.fs.writefile(path, content)
-# puke.fs.checksum(path, hash="md5")
 # puke.fs.symlink(source, linkpath)
-# puke.fs.chown(path, uname, gname=None, recursive=False)
-# puke.fs.chmod(path, mode, recursive=False)
+# puke.fs.checksum(path, hash="md5")
+
 # puke.fs.join(...)
 # puke.fs.basename(path)
 # puke.fs.dirname(path)
