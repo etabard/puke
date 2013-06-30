@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import unittest
+import unittest2 as unittest
 
 import os
 import sys
@@ -43,7 +43,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "danglinglink")
@@ -51,7 +51,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
     def test_isfile2(self):
         self.assertEqual(puke2.fs.isfile(join(root, "dir"), True), False)
@@ -69,7 +69,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "danglinglink")
@@ -77,7 +77,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
     def test_isdir(self):
         self.assertEqual(puke2.fs.isdir(join(root, "dir")), True)
@@ -93,7 +93,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.DirectoryNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "danglinglink")
@@ -101,7 +101,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.DirectoryNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
     def test_isdir2(self):
         self.assertEqual(puke2.fs.isdir(join(root, "dir"), True), True)
@@ -119,7 +119,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.DirectoryNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "danglinglink")
@@ -127,7 +127,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.DirectoryNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
     def test_islink(self):
         self.assertEqual(puke2.fs.islink(join(root, "dir")), False)
@@ -143,7 +143,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.SymlinkNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "danglinglink")
@@ -151,7 +151,7 @@ class ExistenceTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.SymlinkNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
 
 class FileManipulationTest(unittest.TestCase):
@@ -163,7 +163,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "dirlink")
@@ -171,7 +171,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         self.assertEqual(puke2.fs.readfile(join(root, "file")), "ß")
         self.assertEqual(puke2.fs.readfile(join(root, "filelink")), "ß")
@@ -182,7 +182,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "unreadablefile")
@@ -190,7 +190,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.PermissionDenied)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "nonexistent")
@@ -198,7 +198,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "danglinglink")
@@ -206,7 +206,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
     def test_write(self):
         content = "♥"
@@ -216,7 +216,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "dirlink")
@@ -224,7 +224,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         puke2.fs.writefile(join(root, "file"), content)
         self.assertEqual(puke2.fs.readfile(join(root, "file")), content)
@@ -238,7 +238,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "unreadablefile")
@@ -246,7 +246,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.PermissionDenied)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         p = join(root, "nonexistent")
         puke2.fs.writefile(p, content)
@@ -259,7 +259,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.PathNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
     def test_copy(self):
         destination = join(root, "copyresult")
@@ -269,7 +269,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "dirlink")
@@ -277,7 +277,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         puke2.fs.copyfile(join(root, "file"), destination)
         self.assertEqual(puke2.fs.readfile(destination), "ß")
@@ -295,7 +295,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.UnexpectedDirectory)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "unreadablefile")
@@ -303,7 +303,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.PermissionDenied)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "nonexistent")
@@ -311,7 +311,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "danglinglink")
@@ -319,7 +319,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.FileNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
     def test_chmod(self):
         for p in ["dir", "dirlink", "file", "filelink",
@@ -339,7 +339,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.PathNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
         try:
             p = join(root, "danglinglink")
@@ -347,7 +347,7 @@ class FileManipulationTest(unittest.TestCase):
             self.assertTrue(False)
         except Exception as e:
             self.assertIsInstance(e, puke2.exceptions.PathNotFound)
-            self.assertEqual(e.message, puke2.fs.abspath(p))
+            self.assertEqual(str(e), puke2.fs.abspath(p))
 
   # Kind of m00t - none of these tests might work without root
     def test_chown(self):
