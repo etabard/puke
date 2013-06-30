@@ -1,7 +1,8 @@
 # -*- coding: utf8 -*-
 
 import types
-from inspect import (getcallargs, getdoc)
+from inspect import getdoc
+from .compat import getcallargs
 
 from .exceptions import TaskNotFound
 __tasks__ = {}
