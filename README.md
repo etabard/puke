@@ -670,3 +670,7 @@ Nope.
 ## Gotcha
 
 Don't puke on yourself!
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/webitup/puke/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
