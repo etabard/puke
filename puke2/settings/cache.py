@@ -1,1 +1,1 @@
-CACHE_DIR=".pukecache"
+CACHE_DIR = ".pukecache"

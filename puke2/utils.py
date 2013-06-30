@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 import collections
 import os
@@ -36,7 +36,7 @@ def deepmerge(a, b):
             if key not in current_dst:
                 current_dst[key] = current_src[key]
             else:
-                if quacks_like_dict(current_src[key]) and quacks_like_dict(current_dst[key]) :
+                if quacks_like_dict(current_src[key]) and quacks_like_dict(current_dst[key]):
                     stack.append((current_dst[key], current_src[key]))
                 else:
                     current_dst[key] = current_src[key]
@@ -44,7 +44,7 @@ def deepmerge(a, b):
 
 
 _rechmod = re.compile(r"(?P<who>[uoga]?)(?P<op>[+\-=])(?P<value>[ugo]|[rwx]*)")
-_stat_prefix = dict(u = "USR", g = "GRP", o = "OTH")
+_stat_prefix = dict(u="USR", g="GRP", o="OTH")
 
 
 def octalmode(location, symbolic):
@@ -57,7 +57,7 @@ def octalmode(location, symbolic):
         * a sequence of letters in r, w, x, or a single letter in o, g, u
     Example:
         chmod(myfile, "u+x")    # make the file executable for it's owner.
-        chmod(myfile, "o-rwx")  # remove all permissions for all users not in the group. 
+        chmod(myfile, "o-rwx")  # remove all permissions for all users not in the group.
     See also the man page of chmod.
     """
 
@@ -71,9 +71,9 @@ def octalmode(location, symbolic):
     else:
         mask = _ors((_stat_bit(who, z) for z in value))
     if op == "=":
-        mode &= ~ _ors((_stat_bit(who, z) for z in  "rwx"))
+        mode &= ~ _ors((_stat_bit(who, z) for z in "rwx"))
     mode = (mode & ~mask) if (op == "-") else (mode | mask)
-    
+
     return mode
 
 
@@ -84,5 +84,6 @@ def _stat_bit(who, letter):
         return _stat_bit("o", letter) | _stat_bit("g", letter) | _stat_bit("u", letter)
     return getattr(stat, "S_I%s%s" % (letter.upper(), _stat_prefix[who]))
 
-def _ors(sequence, initial = 0):
+
+def _ors(sequence, initial=0):
     return functools.reduce(operator.__or__, sequence, initial)

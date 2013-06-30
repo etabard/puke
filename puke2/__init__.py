@@ -32,23 +32,30 @@ def run():
     from optparse import OptionParser
     import sys
     import os
-    
 
     parser = OptionParser()
-    parser.add_option("-c", "--clear", action="store_true", dest="clearcache", help="Spring time, clean all the vomit")
-    parser.add_option("-q", "--quiet", action="store_false", dest="verbose", help="don't print status messages to stdout")
-    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", help="print more detailed status messages to stdout")
-    parser.add_option("-t", "--tasks",action="store_true",  dest="list_tasks", help="list tasks")
-    parser.add_option("-l", "--log", dest="logfile", help="Write debug messages to given logfile")
-    parser.add_option("-f", "--file", dest="file", help="Use the given build script")
-    parser.add_option("-i", "--info",action="store_true",  dest="info", help="puke task --info show task informations")
-    parser.add_option("-V", "--version",action="store_true",  dest="version", help="print the Puke version")
-    
+    parser.add_option("-c", "--clear", action="store_true", dest="clearcache",
+                      help="Spring time, clean all the vomit")
+    parser.add_option("-q", "--quiet", action="store_false", dest="verbose",
+                      help="don't print status messages to stdout")
+    parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
+                      help="print more detailed status messages to stdout")
+    parser.add_option("-t", "--tasks", action="store_true",  dest="list_tasks",
+                      help="list tasks")
+    parser.add_option("-l", "--log", dest="logfile",
+                      help="Write debug messages to given logfile")
+    parser.add_option("-f", "--file", dest="file",
+                      help="Use the given build script")
+    parser.add_option("-i", "--info", action="store_true",  dest="info",
+                      help="puke task --info show task informations")
+    parser.add_option("-V", "--version", action="store_true",  dest="version",
+                      help="print the Puke version")
+
     if sys.platform.lower() == "darwin":
-        parser.add_option("-s", "--speak",action="store_true",  dest="speak", help="puke speaks on fail/success")
+        parser.add_option("-s", "--speak", action="store_true",  dest="speak",
+                          help="puke speaks on fail/success")
 
     (options, args) = parser.parse_args()
-
 
     #output version
     if options.version:
@@ -68,7 +75,7 @@ def run():
         raise exceptions.PukefileNotFound(options.file or settings.PUKEFILES)
 
     #TODO remove puke legacy
-    scope = {__name__ : sys.modules[__name__], 'puke' : sys.modules[__name__]}
+    scope = {__name__: sys.modules[__name__], 'puke': sys.modules[__name__]}
     scriptvalue = execfile(scriptpath, scope, scope)
     print(scriptvalue)
 
@@ -80,7 +87,7 @@ def run():
 
 def main():
     import sys
-    
+
     try:
         run()
     except Exception as error:
