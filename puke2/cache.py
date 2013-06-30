@@ -21,6 +21,7 @@ text_type = unicode
 string_types = (str, unicode)
 integer_types = (int, long)
 
+
 def to_bytes(x, charset=sys.getdefaultencoding(), errors='strict'):
         if x is None:
             return None
@@ -197,7 +198,8 @@ class FileSystemCache(BaseCache):
     #: used for temporary files by the FileSystemCache
     _fs_transaction_suffix = '.__pukecache'
 
-    def __init__(self, cache_dir=CACHE_DIR, threshold=500, default_timeout=300, mode=0o600):
+    def __init__(self, cache_dir=CACHE_DIR, threshold=500,
+                 default_timeout=300, mode=0o600):
         BaseCache.__init__(self, default_timeout)
         self._path = cache_dir
         self._threshold = threshold
@@ -243,7 +245,7 @@ class FileSystemCache(BaseCache):
 
     def _get_filename(self, key):
         if isinstance(key, text_type):
-            key = key.encode('utf-8') #XXX unicode review
+            key = key.encode('utf-8')  # XXX unicode review
         hash = md5(key).hexdigest()
         return os.path.join(self._path, hash)
 
