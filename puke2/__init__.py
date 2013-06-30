@@ -21,6 +21,7 @@ from . import experimental
 from . import display
 from . import logging
 from . import tasks
+from . import config
 from .tasks import task
 from .dependencies import sh
 
